@@ -110,10 +110,9 @@ async function respondToExchange(req,res) {
             return res.status(404).json({message: "Furniture not found"})
         }
 
-        exchange.status = status
-        await exchange.save()
+        const updatedExchange = await ExchangeRequest.findByIdAndUpdate(req.params.id, {status}, {new: true, runValidators: true})
 
-        res.status(200).json({message: `Exchange request ${status}`, exchange})
+        res.status(200).json({message: `Exchange request ${status}`, updateExchange})
     }
     catch(err){
         return res.status(500).json({message: "Failed to respond to exchange request"})
@@ -136,23 +135,13 @@ async function completeExchange(req,res) {
             return res.status(400).json({message: "Only accepted exchanges can be completed"})
         }
 
-        const requestedItem = await Furniture.findById(exchange.requestedFurniture)
+        await Furniture.findByIdAndUpdate(exchange.requestedFurniture, {status: "Sold"}, {new: true})
 
-        const offeredItem = await Furniture.findById(exchange.offeredFurniture)
+        await Furniture.findByIdAndUpdate(exchange.offeredFurniture, {status: "Sold"}, {new: true})
 
-        if(!requestedItem || !offeredItem){
-            return res.status(404).json({message: "Furniture not found"})
-        }
+        const updatedExchange = await ExchangeRequest.findByIdAndUpdate(req.params.id, {status: "completed"}, {new: true, runValidators: true})
 
-        requestedItem.status = "Sold"
-        offeredItem.status = "Sold"
-        await requestedItem.save()
-        await offeredItem.save()
-
-        exchange.status = "completed"
-        await exchange.save()
-
-        res.status(200).json({message: `Exchange completed successfully`, exchange})
+        res.status(200).json(updatedExchange)
     }
     catch(err){
         return res.status(500).json({message: "Failed to complete exchange"})
@@ -173,6 +162,36 @@ async function updateExchange(req,res) {
     return res.status(400).json({message: "Invalid exchange status"})
 }
 
+async function cancelExchange(req,res) {
+    try{
+        const exchange = await ExchangeRequest.findById(req.params.id)
+
+        if(!exchange){
+            return res.status(404).json({message: "Exchange request not found"})
+        }
+
+        if(exchange.sende._id !== req.user._id){
+            return res.status(403).json({message: "Only the requester can cancel this request"})
+        }
+
+        if(exchange.status !== "pending"){
+            return res.status(400).json({message: "Only pending requests can be cancelled"})
+        }
+
+        exchange.status = "cancelled"
+        await exchange.save()
+
+        return res.status(200).json({message: `Exchange request cancelled`, exchange})
+    }
+    catch(err){
+        return res.status(500).json({message: "Failed to cancel exchange request"})
+    }
+}
+
 module.exports = {
-    createExchange
+    createExchange,
+    getAllExchanges,
+    getExchangeById,
+    updateExchange,
+    cancelExchange
 }
