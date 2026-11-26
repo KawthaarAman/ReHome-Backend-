@@ -11,7 +11,7 @@ const connectToDB = require('./config/db.js')
 const authRoutes = require('./routes/auth.routes')
 const favoritesRoutes = require ('./routes/favorites.routes.js')
 const reviewsRoutes = require ('./routes/reviews.routes.js')
-const dashboardRoutes = require('./routes/dahboard.routes.js')
+const dashboardRoutes = require('./routes/dashboard.routes.js')
 
 
 // Middleware
@@ -27,7 +27,7 @@ app.use(morgan('dev'))
 
 // Routes
 app.use('/auth',authRoutes)
-app,use ('api/favorites', favoritesRoutes)
+app.use ('api/favorites', favoritesRoutes)
 app.use ('api/reviews', reviewsRoutes)
 app.use('api/dashboard', dashboardRoutes)
 
