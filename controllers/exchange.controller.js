@@ -159,6 +159,20 @@ async function completeExchange(req,res) {
     }
 }
 
+async function updateExchange(req,res) {
+    const {status} = req.body
+
+    if(status === "accepted" || status === "rejected"){
+        return respondToExchange(req,res)
+    }
+
+    if(status === "completed"){
+        return completeExchange(req,res)
+    }
+
+    return res.status(400).json({message: "Invalid exchange status"})
+}
+
 module.exports = {
     createExchange
 }
