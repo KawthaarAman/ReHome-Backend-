@@ -12,6 +12,7 @@ const authRoutes = require('./routes/auth.routes')
 const favoritesRoutes = require ('./routes/favorites.routes.js')
 const reviewsRoutes = require ('./routes/reviews.routes.js')
 const dashboardRoutes = require('./routes/dashboard.routes.js')
+const ExchangeRequest = require("./models/ExchangeRequest.js")
 
 
 // Middleware
@@ -30,6 +31,7 @@ app.use('/auth',authRoutes)
 app.use ('/api/favorites', favoritesRoutes)
 app.use ('/api/reviews', reviewsRoutes)
 app.use('/api/dashboard', dashboardRoutes)
+app.use('/api/exchanges', exchangeRoutes)
 
 // connect to database and listen on Port 3000
 async function startServer() {
