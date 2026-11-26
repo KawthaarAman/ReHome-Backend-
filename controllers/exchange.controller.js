@@ -120,6 +120,45 @@ async function respondToExchange(req,res) {
     }
 }
 
+async function completeExchange(req,res) {
+    try{
+        const exchange = await ExchangeRequest.findById(req.params.id)
+
+        if(!exchange){
+            return res.status(404).json({message: "Exchange request not found"})
+        }
+
+        if(exchange.sender._id !== req.user._id){
+            return res.status(403).json({message: "Only the requester can complete this exchange"})
+        }
+
+        if(exchange.status !== "accepted"){
+            return res.status(400).json({message: "Only accepted exchanges can be completed"})
+        }
+
+        const requestedItem = await Furniture.findById(exchange.requestedFurniture)
+
+        const offeredItem = await Furniture.findById(exchange.offeredFurniture)
+
+        if(!requestedItem || !offeredItem){
+            return res.status(404).json({message: "Furniture not found"})
+        }
+
+        requestedItem.status = "Sold"
+        offeredItem.status = "Sold"
+        await requestedItem.save()
+        await offeredItem.save()
+
+        exchange.status = "completed"
+        await exchange.save()
+
+        res.status(200).json({message: `Exchange completed successfully`, exchange})
+    }
+    catch(err){
+        return res.status(500).json({message: "Failed to complete exchange"})
+    }
+}
+
 module.exports = {
     createExchange
 }
