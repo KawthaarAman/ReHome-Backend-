@@ -4,7 +4,7 @@ const furnitureController = require("../controllers/furniture.controller");
 
 // Furniture routes
 
-/// Get all furniture items
+/// Get all furniture items to the routes
 router.get("/", furnitureController.getAllFurniture);
 /// Get furniture item by ID
 router.get("/:id", furnitureController.getFurnitureById);

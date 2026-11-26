@@ -12,7 +12,7 @@ const authRoutes = require('./routes/auth.routes')
 const favoritesRoutes = require ('./routes/favorites.routes.js')
 const reviewsRoutes = require ('./routes/reviews.routes.js')
 const dashboardRoutes = require('./routes/dashboard.routes.js')
-const ExchangeRequest = require("./models/ExchangeRequest.js")
+const exchangeRoutes = require('./routes/exchange.routes.js')
 
 
 // Middleware
