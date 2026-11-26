@@ -7,14 +7,25 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
       trim: true,
-      lowercase:true
+      lowercase: true
     },
+
+    name: {
+      type: String,
+      trim: true
+    },
+
+    profileImage: {
+      type: String,
+      default: ""
+    },
+
     hashedPassword: {
       type: String,
       required: true
     },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 userSchema.set("toJSON", {
