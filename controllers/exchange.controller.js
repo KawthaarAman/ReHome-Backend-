@@ -83,6 +83,43 @@ async function getExchangeById(req,res) {
     }
 }
 
+async function respondToExchange(req,res) {
+    try{
+        const {status} = req.body
+        const exchange = await ExchangeRequest.findById(req.params.id)
+
+        if(!exchange){
+            return res.status(404).json({message: "Exchange request not found"})
+        }
+
+        if(exchange.receiver._id !== req.user._id){
+            return res.status(403).json({message: "Only the furniture owner can respond"})
+        }
+
+        if(exchange.status !== "pending"){
+            return res.status(400).json({message: "Only pending requests can be accepted or rejected"})
+        }
+
+        if(status === "accepted"){
+            const requestedItem = await Furniture.findById(exchange.requestedFurniture)
+
+            const offeredItem = await Furniture.findById(exchange.offeredFurniture)
+        }
+
+        if(!requestedItem || !offeredItem){
+            return res.status(404).json({message: "Furniture not found"})
+        }
+
+        exchange.status = status
+        await exchange.save()
+
+        res.status(200).json({message: `Exchange request ${status}`, exchange})
+    }
+    catch(err){
+        return res.status(500).json({message: "Failed to respond to exchange request"})
+    }
+}
+
 module.exports = {
     createExchange
 }
