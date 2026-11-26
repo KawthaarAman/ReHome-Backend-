@@ -1,6 +1,7 @@
 const ExchangeRequest = require('../models/ExchangeRequest')
 const Furniture = require('../models/furniture')
 const mongoose = require('mongoose')
+const User = require('../models/User')
 
 async function createExchange(req,res) {
     try{
@@ -35,6 +36,23 @@ async function createExchange(req,res) {
     catch (err) {
         return res.status(500).json({message: "Failed to create exchange request"})
     }
+}
+
+async function getAllExchanges(req,res) {
+    try{
+        const userId = req.user._id
+
+        const exchanges = await ExchangeRequest.find({
+            sender: userId, receiver: userId
+        }).populate("sender", "username")
+        .populate("receiver", "username")
+        .populate("requestedFurniture", "title img status")
+        .populate("offeredFurniture", "title img status")
+        .sort({createdAt: -1})
+
+        return res.status(200).json(exchanges)
+    }
+    catch(err){}
 }
 
 module.exports = {
