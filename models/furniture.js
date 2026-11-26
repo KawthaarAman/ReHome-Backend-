@@ -15,7 +15,7 @@
    },
    category: {
      type: String,
-     enum: ["Living room", "Bedroom", "Bathroom", "Kitchen", "Home office", "Outdoor", "Dining room" , "Other"],
+     enum: ["Living room", "Bedroom", "Bathroom", "Kitchen", "Home office", "Outdoor", "Dining room" , "Lighting", "Other"],
      required: true
    },
    condition: {
