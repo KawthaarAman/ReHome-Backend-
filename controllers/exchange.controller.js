@@ -52,7 +52,35 @@ async function getAllExchanges(req,res) {
 
         return res.status(200).json(exchanges)
     }
-    catch(err){}
+    catch(err){
+        return res.status(500).json({message: "Failed to get exchange requests"})
+    }
+}
+
+async function getExchangeById(req,res) {
+    try{
+        const exchange = await ExchangeRequest.findById(req.params.id).populate("sender", "username")
+        .populate("receiver", "username")
+        .populate("requestedFurniture", "title img status")
+        .populate("offeredFurniture", "title img status")
+
+        if(!exchange){
+            return res.status(404).json({message: "Exchange request not found"})
+        }
+
+        const userId = req.user._id
+        const senderId = req.sender._id
+        const receiverId = req.receiver._id
+
+        if(userId !== senderId && userId !== receiverId) {
+            return res.status(403).json({message: "You are not authorized to view this request"})
+        }
+
+        return res.status(200).json(exchange)
+    }
+    catch(err){
+        return res.status(500).json({message: "Failed to get exchange request"})
+    }
 }
 
 module.exports = {
