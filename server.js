@@ -27,9 +27,9 @@ app.use(morgan('dev'))
 
 // Routes
 app.use('/auth',authRoutes)
-app.use ('api/favorites', favoritesRoutes)
-app.use ('api/reviews', reviewsRoutes)
-app.use('api/dashboard', dashboardRoutes)
+app.use ('/api/favorites', favoritesRoutes)
+app.use ('/api/reviews', reviewsRoutes)
+app.use('/api/dashboard', dashboardRoutes)
 
 // connect to database and listen on Port 3000
 async function startServer() {
