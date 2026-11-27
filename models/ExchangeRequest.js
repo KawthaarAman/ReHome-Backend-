@@ -26,7 +26,7 @@ const exchangeRequestSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['pending', 'accepted', 'rejected', 'cancelled', 'completed'],
+        enum: ['pending', 'accepted', 'rejected', 'completed'],
         default: 'pending'
     }
 }, {timestamps: true})
